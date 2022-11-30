@@ -3,7 +3,7 @@
     <p>
       Created by
       <a href="https://www.htl-wels.at" target="_blank" rel="nofollow"
-        >Your Name</a
+        >Mathias Gnadlinger</a
       >
     </p>
 
