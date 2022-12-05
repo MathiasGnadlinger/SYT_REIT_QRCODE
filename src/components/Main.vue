@@ -9,6 +9,7 @@
       <button
         :style="{ background: color }"
         @click="showcolorpicker = showcolorpicker ? false : true"
+        class="fileP"
       >
         &nbsp;
       </button>
@@ -30,14 +31,23 @@
 https://developer.mozilla.org/en-US/docs/Web/CSS/minmax
 https://css-tricks.com/snippets/css/complete-guide-grid/
 
-      -->
+    
     -->
     <div class="genOut">
       <div v-if="qr.output" class="text-center">
-        <div v-html="qr.output" class="viewer mx-auto"></div>
+        <div v-html="qr.output"></div>
       </div>
     </div>
   </div>
+  <div>
+  <button @click="downloadSvg" class="fileSave" >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fileSa">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Download SVG
+  </button>
+            
 </template>
 
 <script>
@@ -46,6 +56,7 @@ import { saveAs } from 'file-saver';
 import { reactive, ref, watch } from 'vue';
 import { ColorPicker } from 'vue-color-kit';
 import 'vue-color-kit/dist/vue-color-kit.css';
+import {saveAs} from "file-saver";
 
 export default {
   name: 'Colorpicker',
@@ -79,6 +90,15 @@ export default {
         // this.suckerCanvas && this.suckerCanvas.remove
       }
     }
+
+    function getLink (url)  {
+  return url.includes('http://') || url.includes('https://') ? url : 'https://'+url
+}
+
+function downloadSvg ()  {
+  const blob = new Blob([qr.output], {type: 'image/svg+xml'});
+  saveAs(blob, qr.url + ".svg");
+}
     /* *************  */
     const generateQr = () => {
       qr.url = qr.url.trim(); // trim spaces
@@ -93,6 +113,7 @@ export default {
         (err, string) => {
           if (err) throw err;
           qr.output = string;
+          console.log(string);
         }
       );
     };
@@ -106,6 +127,12 @@ export default {
         generateQr();
       }, 800);
     }
+
+  function downloadSvg ()  {
+  const blob = new Blob([qr.output], {type: 'image/svg+xml'});
+  saveAs(blob, qr.url + ".svg");
+}
+
     return {
       qr,
       color,
@@ -116,6 +143,8 @@ export default {
       showcolorpicker,
       openSucker,
       urlChanged,
+      getLink,
+      downloadSvg
     };
   },
 };
@@ -130,7 +159,7 @@ input {
 input.:focus {
   border: 2px solid #73ad21;
 }
-button {
+.fileP {
   width: 2.5em;
   height: 2.5em;
   border-radius: 50%;
@@ -140,5 +169,21 @@ button {
 }
 .items-center {
   align-items: center;
+}
+.genOut {
+}
+.fileSave {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 0.5rem;
+  margin-left:auto;
+  margin-right:auto;
+  padding-top:5px;
+  padding-bottom:5px;
+  background-color:black;
+  color:white;
+  
+  /*items-center mx-auto text-sm bg-gray-800 text-white px-3 py-2 rounded-lg */
 }
 </style>
